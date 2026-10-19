@@ -130,3 +130,24 @@ InsightArena is not just about predicting outcomes, it's about proving insight.
 
 <!-- handsoff-issue-1821 -->
 - #1821: [Contract] — creator-event-manager: `batch_verify_addresses` With Duplicate Entries
+
+<!-- handsoff-issue-1846 -->
+- #1846: [Backend] — Market Resolution Challenge Window Enforcement
+
+<!-- handsoff-issue-1847 -->
+- #1847: [Backend] — Trending Markets Computation Tie-Breaking
+
+<!-- handsoff-issue-1841 -->
+- #1841: [Backend] — Leaderboard Cache Invalidation on New Snapshot Creation
+
+<!-- handsoff-issue-1844 -->
+- #1844: [Backend] — Search Vector Backfill Batch Resumability
+
+<!-- handsoff-issue-1845 -->
+- #1845: [Backend] — Fuzzy Search Suggestions Deduplication
+
+<!-- handsoff-issue-1848 -->
+- #1848: [Backend] — Market Report Generation for Zero-Activity Markets
+
+<!-- handsoff-issue-1829 -->
+- #1829: [Backend] — Dispute Arbiter Double-Vote Prevention

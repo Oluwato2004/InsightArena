@@ -48,6 +48,23 @@ pub fn distribute(_env: &Env, pool: &mut PoolState, amount: i128) -> Result<(), 
     Ok(())
 }
 
+/// Route a penalty amount into the reward pool for distribution across
+/// `total_shares`.
+///
+/// This is a thin, explicitly-named wrapper around [`distribute`] so that
+/// penalty routing shares the exact same zero-shares semantics: when
+/// `total_shares == 0` the amount is parked in `pending_rewards` (never
+/// divided by zero) and is folded back into the accumulator once a new
+/// staker joins the pool. With a nonzero `total_shares` the amount is
+/// distributed proportionally to existing positions via the accumulator.
+pub fn route_penalty_to_pool(
+    env: &Env,
+    pool: &mut PoolState,
+    amount: i128,
+) -> Result<(), StakingError> {
+    distribute(env, pool, amount)
+}
+
 /// Compute the rewards currently claimable by a position.
 pub fn pending(pool: &PoolState, position: &Position) -> Result<i128, StakingError> {
     let accrued = position
@@ -60,6 +77,22 @@ pub fn pending(pool: &PoolState, position: &Position) -> Result<i128, StakingErr
     accrued
         .checked_sub(position.reward_debt)
         .ok_or(StakingError::Overflow)
+}
+
+/// Compute the rewards currently claimable by a staker, erroring with a
+/// defined `StakingError` when the staker has no open position.
+///
+/// This is the single source of truth for the "no position" path so that
+/// `claim_rewards` and `get_position` agree: a missing position is reported
+/// as `StakingError::NoPosition` here and as `None` by `get_position`.
+pub fn pending_for_staker(
+    pool: &PoolState,
+    position: Option<&Position>,
+) -> Result<i128, StakingError> {
+    match position {
+        Some(position) => pending(pool, position),
+        None => Err(StakingError::NoPosition),
+    }
 }
 
 /// Reset a position's `reward_debt` to the current accumulator checkpoint.
